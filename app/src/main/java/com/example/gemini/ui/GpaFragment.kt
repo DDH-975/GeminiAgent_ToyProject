@@ -26,17 +26,18 @@ class GpaAdapter(
     class ViewHolder(val binding: ItemGpaSubjectBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemGpaSubjectBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemGpaSubjectBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val subject = subjects[position]
-        
-        holder.binding.etSubjectName.tag = null 
+
+        holder.binding.etSubjectName.tag = null
         holder.binding.etSubjectName.setText(subject.name)
         holder.binding.spinnerCredits.setSelection(subject.credits - 1)
-        
+
         val gradeArray = holder.itemView.context.resources.getStringArray(R.array.grades_array)
         val gradeIndex = gradeArray.indexOf(subject.grade)
         if (gradeIndex >= 0) holder.binding.spinnerGrade.setSelection(gradeIndex)
@@ -49,28 +50,43 @@ class GpaAdapter(
                     subjects[pos].name = s.toString()
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        holder.binding.spinnerCredits.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                val currentPos = holder.bindingAdapterPosition
-                if (currentPos != RecyclerView.NO_POSITION) {
-                    subjects[currentPos].credits = pos + 1
+        holder.binding.spinnerCredits.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    pos: Int,
+                    id: Long
+                ) {
+                    val currentPos = holder.bindingAdapterPosition
+                    if (currentPos != RecyclerView.NO_POSITION) {
+                        subjects[currentPos].credits = pos + 1
+                    }
                 }
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
 
-        holder.binding.spinnerGrade.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                val currentPos = holder.bindingAdapterPosition
-                if (currentPos != RecyclerView.NO_POSITION) {
-                    subjects[currentPos].grade = gradeArray[pos]
-                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+
+        holder.binding.spinnerGrade.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    pos: Int,
+                    id: Long
+                ) {
+                    val currentPos = holder.bindingAdapterPosition
+                    if (currentPos != RecyclerView.NO_POSITION) {
+                        subjects[currentPos].grade = gradeArray[pos]
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
 
         holder.binding.btnDelete.setOnClickListener {
             val currentPos = holder.bindingAdapterPosition
@@ -88,14 +104,18 @@ class GpaFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: GpaViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentGpaBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
         setupRecyclerView()
         setupObservers()
 
