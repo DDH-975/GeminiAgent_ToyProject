@@ -3,6 +3,8 @@ package com.example.gemini.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class CalculatorViewModel : ViewModel() {
 
@@ -14,7 +16,7 @@ class CalculatorViewModel : ViewModel() {
 
     private var currentNumber = ""
     private var operator = ""
-    private var firstOperand: Double? = null
+    private var firstOperand: BigDecimal? = null
 
     fun onNumberClick(number: String) {
         currentNumber += number
@@ -23,10 +25,22 @@ class CalculatorViewModel : ViewModel() {
 
     fun onOperatorClick(op: String) {
         if (currentNumber.isNotEmpty()) {
-            firstOperand = currentNumber.toDoubleOrNull()
+            firstOperand = try {
+                BigDecimal(currentNumber)
+            } catch (e: Exception) {
+                null
+            }
             operator = op
             currentNumber = ""
             _expression.value = (_expression.value ?: "") + " " + op + " "
+        } else if (firstOperand != null) {
+            // Operator change
+            operator = op
+            val exp = _expression.value ?: ""
+            val lastSpaceIndex = exp.trimEnd().lastIndexOf(" ")
+            if (lastSpaceIndex != -1) {
+                _expression.value = exp.substring(0, lastSpaceIndex).trim() + " " + op + " "
+            }
         }
     }
 
@@ -41,25 +55,53 @@ class CalculatorViewModel : ViewModel() {
     fun onBackspaceClick() {
         val exp = _expression.value ?: ""
         if (exp.isNotEmpty()) {
-            _expression.value = exp.substring(0, exp.length - 1)
-            if (currentNumber.isNotEmpty()) {
-                currentNumber = currentNumber.substring(0, currentNumber.length - 1)
+            if (exp.endsWith(" ")) {
+                // Remove operator and spaces
+                _expression.value = exp.substring(0, exp.length - 3)
+                operator = ""
+                currentNumber = firstOperand?.toPlainString() ?: ""
+                firstOperand = null
+            } else {
+                _expression.value = exp.substring(0, exp.length - 1)
+                if (currentNumber.isNotEmpty()) {
+                    currentNumber = currentNumber.substring(0, currentNumber.length - 1)
+                }
             }
         }
     }
 
     fun onEqualsClick() {
         if (firstOperand != null && operator.isNotEmpty() && currentNumber.isNotEmpty()) {
-            val secondOperand = currentNumber.toDoubleOrNull() ?: 0.0
-            val res = when (operator) {
-                "+" -> firstOperand!! + secondOperand
-                "-" -> firstOperand!! - secondOperand
-                "*" -> firstOperand!! * secondOperand
-                "/" -> if (secondOperand != 0.0) firstOperand!! / secondOperand else Double.NaN
-                else -> 0.0
+            val secondOperand = try {
+                BigDecimal(currentNumber)
+            } catch (e: Exception) {
+                BigDecimal.ZERO
             }
-            _result.value = res.toString()
-            currentNumber = res.toString()
+            
+            val res = try {
+                when (operator) {
+                    "+" -> firstOperand!!.add(secondOperand)
+                    "-" -> firstOperand!!.subtract(secondOperand)
+                    "*" -> firstOperand!!.multiply(secondOperand)
+                    "/" -> if (secondOperand != BigDecimal.ZERO) {
+                        firstOperand!!.divide(secondOperand, 10, RoundingMode.HALF_UP).stripTrailingZeros()
+                    } else {
+                        null
+                    }
+                    else -> BigDecimal.ZERO
+                }
+            } catch (e: Exception) {
+                null
+            }
+
+            if (res == null) {
+                _result.value = "Error"
+                currentNumber = ""
+            } else {
+                val formattedRes = res.stripTrailingZeros().toPlainString()
+                _result.value = formattedRes
+                currentNumber = formattedRes
+            }
             firstOperand = null
             operator = ""
         }
