@@ -1,16 +1,20 @@
-package com.example.gemini
+package com.example.gemini.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.gemini.databinding.FragmentDutchPayBinding
+import com.example.gemini.viewmodel.DutchPayViewModel
 import java.text.DecimalFormat
 
 class DutchPayFragment : Fragment() {
     private var _binding: FragmentDutchPayBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: DutchPayViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDutchPayBinding.inflate(inflater, container, false)
@@ -20,35 +24,40 @@ class DutchPayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupObservers()
+
         binding.btnMinus.setOnClickListener {
-            val current = binding.etPeopleCount.text.toString().toIntOrNull() ?: 1
-            if (current > 1) {
-                binding.etPeopleCount.setText((current - 1).toString())
-            }
+            viewModel.decrementPeople()
         }
 
         binding.btnPlus.setOnClickListener {
-            val current = binding.etPeopleCount.text.toString().toIntOrNull() ?: 1
-            binding.etPeopleCount.setText((current + 1).toString())
+            viewModel.incrementPeople()
+        }
+
+        binding.etPeopleCount.addTextChangedListener {
+            val count = it.toString().toIntOrNull() ?: 1
+            viewModel.setPeopleCount(count)
         }
 
         binding.btnCalculateDutch.setOnClickListener {
-            calculateDutchPay()
+            val amountStr = binding.etTotalAmount.text.toString()
+            if (amountStr.isNotEmpty()) {
+                viewModel.calculateDutchPay(amountStr.toDouble())
+            }
         }
     }
 
-    private fun calculateDutchPay() {
-        val amountStr = binding.etTotalAmount.text.toString()
-        val peopleStr = binding.etPeopleCount.text.toString()
+    private fun setupObservers() {
+        viewModel.peopleCount.observe(viewLifecycleOwner) { count ->
+            if (binding.etPeopleCount.text.toString() != count.toString()) {
+                binding.etPeopleCount.setText(count.toString())
+            }
+        }
 
-        if (amountStr.isNotEmpty() && peopleStr.isNotEmpty()) {
-            val totalAmount = amountStr.toDouble()
-            val peopleCount = peopleStr.toInt()
-
-            if (peopleCount > 0) {
-                val perPerson = totalAmount / peopleCount
+        viewModel.perPersonAmount.observe(viewLifecycleOwner) { amount ->
+            if (amount != null) {
                 val formatter = DecimalFormat("#,###")
-                binding.tvPerPersonAmount.text = "${formatter.format(perPerson)} 원"
+                binding.tvPerPersonAmount.text = "${formatter.format(amount)} 원"
                 binding.cardResult.visibility = View.VISIBLE
             }
         }

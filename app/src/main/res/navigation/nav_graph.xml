@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/calculatorFragment"
-        android:name="com.example.gemini.CalculatorFragment"
+        android:name="com.example.gemini.ui.CalculatorFragment"
         android:label="계산기"
         tools:layout="@layout/fragment_calculator" />
 
     <fragment
         android:id="@+id/gpaFragment"
-        android:name="com.example.gemini.GpaFragment"
+        android:name="com.example.gemini.ui.GpaFragment"
         android:label="학점"
         tools:layout="@layout/fragment_gpa" />
 
     <fragment
         android:id="@+id/bmiFragment"
-        android:name="com.example.gemini.BmiFragment"
+        android:name="com.example.gemini.ui.BmiFragment"
         android:label="BMI"
         tools:layout="@layout/fragment_bmi" />
 
     <fragment
         android:id="@+id/dutchPayFragment"
-        android:name="com.example.gemini.DutchPayFragment"
+        android:name="com.example.gemini.ui.DutchPayFragment"
         android:label="더치페이"
         tools:layout="@layout/fragment_dutch_pay" />
 </navigation>

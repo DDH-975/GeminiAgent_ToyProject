@@ -1,4 +1,4 @@
-package com.example.gemini
+package com.example.gemini.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.gemini.databinding.FragmentCalculatorBinding
+import com.example.gemini.viewmodel.CalculatorViewModel
 
 class CalculatorFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.example.gemini
+package com.example.gemini.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.gemini.R
 import com.example.gemini.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

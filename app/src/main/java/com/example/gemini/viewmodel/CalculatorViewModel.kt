@@ -1,10 +1,11 @@
-package com.example.gemini
+package com.example.gemini.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class CalculatorViewModel : ViewModel() {
+
     private val _expression = MutableLiveData("")
     val expression: LiveData<String> = _expression
 
