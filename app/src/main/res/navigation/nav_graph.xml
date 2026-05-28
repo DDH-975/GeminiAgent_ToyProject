@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/calculatorFragment">
+
+    <fragment
+        android:id="@+id/calculatorFragment"
+        android:name="com.example.gemini.CalculatorFragment"
+        android:label="계산기"
+        tools:layout="@layout/fragment_calculator" />
+
+    <fragment
+        android:id="@+id/gpaFragment"
+        android:name="com.example.gemini.GpaFragment"
+        android:label="학점"
+        tools:layout="@layout/fragment_gpa" />
+
+    <fragment
+        android:id="@+id/bmiFragment"
+        android:name="com.example.gemini.BmiFragment"
+        android:label="BMI"
+        tools:layout="@layout/fragment_bmi" />
+
+    <fragment
+        android:id="@+id/dutchPayFragment"
+        android:name="com.example.gemini.DutchPayFragment"
+        android:label="더치페이"
+        tools:layout="@layout/fragment_dutch_pay" />
+</navigation>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="credits_array">
+        <item>1학점</item>
+        <item>2학점</item>
+        <item>3학점</item>
+        <item>4학점</item>
+    </string-array>
+    <string-array name="grades_array">
+        <item>A+</item>
+        <item>A0</item>
+        <item>B+</item>
+        <item>B0</item>
+        <item>C+</item>
+        <item>C0</item>
+        <item>D+</item>
+        <item>D0</item>
+        <item>F</item>
+        <item>P/NP</item>
+    </string-array>
+</resources>
