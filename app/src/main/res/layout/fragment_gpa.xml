@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:padding="16dp"
     tools:context=".ui.GpaFragment">
 
@@ -12,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="학점 계산기"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,6 +21,7 @@
 
     <Button
         android:id="@+id/btn_add_subject"
+        style="@style/ActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="과목 추가"
@@ -51,16 +54,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="평균 평점: 0.0"
-            android:textSize="20sp"
+            android:padding="16dp"
+            android:textColor="@color/operator_sky_blue"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="평균 평점: 4.50"
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/btn_calculate_gpa"
+            style="@style/ActionButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:text="평균 평점(GPA) 계산하기" />
     </LinearLayout>
 

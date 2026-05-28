@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:padding="24dp"
     tools:context=".ui.BmiFragment">
 
@@ -12,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="BMI 계산기"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,6 +21,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_height"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -36,6 +39,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_weight"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -53,8 +57,9 @@
 
     <Button
         android:id="@+id/btn_calculate_bmi"
+        style="@style/ActionButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="24dp"
         android:text="계산하기"
         app:layout_constraintTop_toBottomOf="@+id/til_weight" />
@@ -74,18 +79,19 @@
             android:id="@+id/tv_bmi_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="22.5"
-            android:textSize="48sp"
-            android:textStyle="bold" />
+            android:textColor="@color/black"
+            android:textSize="64sp"
+            android:textStyle="bold"
+            tools:text="22.5" />
 
         <TextView
             android:id="@+id/tv_bmi_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="정상"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="정상" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
