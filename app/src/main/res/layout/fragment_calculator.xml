@@ -33,33 +33,42 @@
         app:strokeColor="#EEEEEE"
         app:strokeWidth="1dp">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scroll_view_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="bottom|end"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbarThumbVertical="@android:color/darker_gray">
 
-            <TextView
-                android:id="@+id/tv_expression"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:textColor="@color/expression_text"
-                android:textSize="24sp"
-                tools:text="1,200 + 3,500" />
+                android:gravity="bottom|end"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-            <TextView
-                android:id="@+id/tv_result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="end"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                tools:text="4,700" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_expression"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textColor="@color/expression_text"
+                    android:textSize="24sp"
+                    tools:text="1,200 + 3,500" />
+
+                <TextView
+                    android:id="@+id/tv_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="end"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    tools:text="4,700" />
+            </LinearLayout>
+        </ScrollView>
     </com.google.android.material.card.MaterialCardView>
 
     <!-- 버튼 영역 -->
