@@ -42,14 +42,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/credits_array" />
+            android:entries="@array/credits_array"
+            android:popupBackground="@color/button_gray" />
 
         <Spinner
             android:id="@+id/spinner_grade"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/grades_array" />
+            android:entries="@array/grades_array"
+            android:popupBackground="@color/button_gray" />
 
         <ImageButton
             android:id="@+id/btn_delete"
