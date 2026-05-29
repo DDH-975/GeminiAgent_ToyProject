@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:padding="16dp"
-    tools:context=".ui.BmiFragment">
+    tools:context=".ui.DiscountFragment">
 
     <TextView
         android:id="@+id/tv_title"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="BMI 계산기"
+        android:text="할인율 계산기"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -49,47 +49,62 @@
             android:padding="20dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_height"
+                android:id="@+id/til_product_name"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="키 (cm)">
+                android:hint="제품명 (선택사항)">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_height"
+                    android:id="@+id/et_product_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_weight"
+                android:id="@+id/til_original_price"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:hint="몸무게 (kg)">
+                android:hint="원래 가격 (원)">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_weight"
+                    android:id="@+id/et_original_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_discount_rate"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="할인율 (%)">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_discount_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/btn_calculate_bmi"
+                android:id="@+id/btn_calculate_discount"
                 style="@style/ActionButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="20dp"
-                android:text="BMI 계산하기" />
+                android:text="할인 가격 확인하기" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- 결과 카드 (히스토리 상세 디자인 적용) -->
+    <!-- 결과 카드 -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/layout_result"
+        android:id="@+id/card_result"
         style="@style/AppCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -109,28 +124,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="당신의 BMI 지수"
+                android:text="최종 결제 금액"
                 android:textColor="@color/expression_text"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/tv_bmi_value"
+                android:id="@+id/tv_final_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/black"
-                android:textSize="48sp"
+                android:textSize="42sp"
                 android:textStyle="bold"
-                tools:text="22.5" />
+                tools:text="8,500 원" />
 
             <TextView
-                android:id="@+id/tv_bmi_status"
+                android:id="@+id/tv_saved_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="20sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/operator_sky_blue"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                tools:text="정상 체중" />
+                tools:text="1,500원 할인!" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

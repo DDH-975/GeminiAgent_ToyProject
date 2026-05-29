@@ -126,6 +126,14 @@ class GpaFragment : Fragment() {
         binding.btnCalculateGpa.setOnClickListener {
             viewModel.calculateGpa()
         }
+
+        binding.btnHistory.setOnClickListener {
+            val historyFragment = HistoryBottomSheetFragment()
+            historyFragment.setHistorySource(viewModel.history) {
+                viewModel.clearHistory()
+            }
+            historyFragment.show(parentFragmentManager, HistoryBottomSheetFragment.TAG)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -147,6 +155,8 @@ class GpaFragment : Fragment() {
                 binding.tvGpaResult.visibility = View.VISIBLE
             }
         }
+        // Keep history LiveData active
+        viewModel.history.observe(viewLifecycleOwner) { }
     }
 
     override fun onDestroyView() {

@@ -35,6 +35,14 @@ class BmiFragment : Fragment() {
                 viewModel.calculateBmi(height, weight)
             }
         }
+
+        binding.btnHistory.setOnClickListener {
+            val historyFragment = HistoryBottomSheetFragment()
+            historyFragment.setHistorySource(viewModel.history) {
+                viewModel.clearHistory()
+            }
+            historyFragment.show(parentFragmentManager, HistoryBottomSheetFragment.TAG)
+        }
     }
 
     private fun setupObservers() {
@@ -46,6 +54,8 @@ class BmiFragment : Fragment() {
                 binding.layoutResult.visibility = View.VISIBLE
             }
         }
+        // Keep history LiveData active
+        viewModel.history.observe(viewLifecycleOwner) { }
     }
 
     override fun onDestroyView() {

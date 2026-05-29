@@ -2,53 +2,74 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".ui.CalculatorFragment">
+    android:background="@color/white">
 
-    <LinearLayout
-        android:id="@+id/layout_display"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="bottom|end"
-        android:orientation="vertical"
-        android:padding="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/layout_buttons"
+    <!-- 히스토리 버튼 상단 고정 -->
+    <ImageButton
+        android:id="@+id/btn_history"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="히스토리"
+        android:src="@android:drawable/ic_menu_recent_history"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/operator_sky_blue" />
 
-        <TextView
-            android:id="@+id/tv_expression"
+    <!-- 디스플레이 영역 (카드 스타일 배경) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_display"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="#F8F9FB"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/layout_buttons"
+        app:layout_constraintTop_toBottomOf="@+id/btn_history"
+        app:strokeColor="#EEEEEE"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textColor="@color/expression_text"
-            android:textSize="24sp"
-            tools:text="123 + 456" />
+            android:layout_height="match_parent"
+            android:gravity="bottom|end"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <TextView
-            android:id="@+id/tv_result"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textColor="@color/result_text"
-            android:textSize="48sp"
-            android:textStyle="bold"
-            tools:text="579" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_expression"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/expression_text"
+                android:textSize="24sp"
+                tools:text="1,200 + 3,500" />
 
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="end"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                tools:text="4,700" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 버튼 영역 -->
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/layout_buttons"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="12dp"
         app:columnCount="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <!-- Row 1 -->
         <Button
@@ -56,32 +77,32 @@
             style="@style/CalculatorButton.Operator"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="C" />
+            android:text="C"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_backspace"
             style="@style/CalculatorButton.Operator"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="⌫" />
+            android:text="⌫"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_percent"
             style="@style/CalculatorButton.Operator"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="%" />
+            android:text="%"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_divide"
             style="@style/CalculatorButton.Operator"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="/" />
+            android:text="/"
+            app:layout_columnWeight="1" />
 
         <!-- Row 2 -->
         <Button
@@ -89,32 +110,32 @@
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="7" />
+            android:text="7"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_8"
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="8" />
+            android:text="8"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_9"
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="9" />
+            android:text="9"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_multiply"
             style="@style/CalculatorButton.Operator"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="*" />
+            android:text="*"
+            app:layout_columnWeight="1" />
 
         <!-- Row 3 -->
         <Button
@@ -122,32 +143,32 @@
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="4" />
+            android:text="4"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_5"
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="5" />
+            android:text="5"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_6"
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="6" />
+            android:text="6"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_minus"
             style="@style/CalculatorButton.Operator"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="-" />
+            android:text="-"
+            app:layout_columnWeight="1" />
 
         <!-- Row 4 -->
         <Button
@@ -155,32 +176,32 @@
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="1" />
+            android:text="1"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_2"
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="2" />
+            android:text="2"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_3"
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="3" />
+            android:text="3"
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_plus"
             style="@style/CalculatorButton.Operator"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="+" />
+            android:text="+"
+            app:layout_columnWeight="1" />
 
         <!-- Row 5 -->
         <Button
@@ -188,25 +209,25 @@
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
+            android:text="0"
             app:layout_columnSpan="2"
-            app:layout_columnWeight="1"
-            android:text="0" />
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_dot"
             style="@style/CalculatorButton.Number"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="." />
+            android:text="."
+            app:layout_columnWeight="1" />
 
         <Button
             android:id="@+id/btn_equals"
             style="@style/CalculatorButton.Operator"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            app:layout_columnWeight="1"
-            android:text="=" />
+            android:text="="
+            app:layout_columnWeight="1" />
 
     </androidx.gridlayout.widget.GridLayout>
 

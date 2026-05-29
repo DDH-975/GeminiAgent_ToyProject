@@ -16,4 +16,8 @@
         android:id="@+id/dutchPayFragment"
         android:icon="@android:drawable/ic_menu_share"
         android:title="더치페이" />
+    <item
+        android:id="@+id/discountFragment"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="할인" />
 </menu>

@@ -1,12 +1,28 @@
 package com.example.gemini.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.gemini.data.AppDatabase
+import com.example.gemini.data.HistoryEntity
+import com.example.gemini.data.HistoryRepository
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
 
-class CalculatorViewModel : ViewModel() {
+class CalculatorViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository: HistoryRepository
+    private val formatter = DecimalFormat("#,###.##########")
+
+    init {
+        val historyDao = AppDatabase.getDatabase(application).historyDao()
+        repository = HistoryRepository(historyDao)
+    }
 
     private val _expression = MutableLiveData("")
     val expression: LiveData<String> = _expression
@@ -14,122 +30,148 @@ class CalculatorViewModel : ViewModel() {
     private val _result = MutableLiveData("")
     val result: LiveData<String> = _result
 
+    val history: LiveData<List<HistoryEntity>> = repository.getHistoryByType("CALCULATOR").asLiveData()
+
+    // tokens contains alternating numbers and operators: ["50", "-", "60"]
+    private val tokens = mutableListOf<String>()
     private var currentNumber = ""
-    private var operator = ""
-    private var firstOperand: BigDecimal? = null
+
+    private fun formatNumber(numStr: String): String {
+        if (numStr.isEmpty()) return ""
+        if (numStr == ".") return "0."
+        return try {
+            val parts = numStr.split(".")
+            val bigDecimal = BigDecimal(parts[0])
+            val formattedInt = formatter.format(bigDecimal)
+            if (numStr.contains(".")) {
+                formattedInt + "." + (if (parts.size > 1) parts[1] else "")
+            } else {
+                formattedInt
+            }
+        } catch (e: Exception) {
+            numStr
+        }
+    }
+
+    private fun updateDisplay() {
+        val sb = StringBuilder()
+        for (token in tokens) {
+            if (token in listOf("+", "-", "*", "/", "%")) {
+                sb.append(" $token ")
+            } else {
+                sb.append(formatNumber(token))
+            }
+        }
+        sb.append(formatNumber(currentNumber))
+        _expression.value = sb.toString()
+    }
 
     fun onNumberClick(number: String) {
-        // 소수점이 이미 있는데 또 입력하려는 경우 방지
         if (number == "." && currentNumber.contains(".")) return
-        
         currentNumber += number
-        _expression.value = (_expression.value ?: "") + number
+        updateDisplay()
     }
 
     fun onOperatorClick(op: String) {
         if (currentNumber.isNotEmpty()) {
-            if (firstOperand == null) {
-                firstOperand = try {
-                    BigDecimal(currentNumber)
-                } catch (e: Exception) {
-                    null
-                }
-            } else if (operator.isNotEmpty()) {
-                val secondOperand = try {
-                    BigDecimal(currentNumber)
-                } catch (e: Exception) {
-                    BigDecimal.ZERO
-                }
-                
-                val intermediateResult = calculate(firstOperand!!, secondOperand, operator)
-                if (intermediateResult == null) {
-                    _result.value = "Error"
-                    onClearClick()
-                    return
-                } else {
-                    firstOperand = intermediateResult
-                }
-            }
-            operator = op
+            tokens.add(currentNumber)
+            tokens.add(op)
             currentNumber = ""
-            _expression.value = (_expression.value ?: "") + " " + op + " "
-        } else if (firstOperand != null) {
-            operator = op
-            val exp = _expression.value ?: ""
-            val lastSpaceIndex = exp.trimEnd().lastIndexOf(" ")
-            if (lastSpaceIndex != -1) {
-                _expression.value = exp.substring(0, lastSpaceIndex).trim() + " " + op + " "
-            }
+        } else if (tokens.isNotEmpty()) {
+            // Replace last operator
+            tokens[tokens.size - 1] = op
         }
+        updateDisplay()
     }
 
     fun onClearClick() {
         _expression.value = ""
         _result.value = ""
+        tokens.clear()
         currentNumber = ""
-        operator = ""
-        firstOperand = null
     }
 
     fun onBackspaceClick() {
-        val exp = _expression.value ?: ""
-        if (exp.isNotEmpty()) {
-            if (exp.endsWith(" ")) {
-                // 연산자 삭제 (공백 포함 3글자)
-                _expression.value = exp.substring(0, exp.length - 3)
-                operator = ""
-                // 삭제 후 이전 숫자를 이어서 입력할 수 있도록 복구
-                currentNumber = firstOperand?.stripTrailingZeros()?.toPlainString() ?: ""
-                firstOperand = null
-            } else {
-                _expression.value = exp.substring(0, exp.length - 1)
-                if (currentNumber.isNotEmpty()) {
-                    currentNumber = currentNumber.substring(0, currentNumber.length - 1)
-                }
+        if (currentNumber.isNotEmpty()) {
+            currentNumber = currentNumber.substring(0, currentNumber.length - 1)
+        } else if (tokens.isNotEmpty()) {
+            // Remove operator
+            tokens.removeAt(tokens.size - 1)
+            // Move last number to currentNumber
+            if (tokens.isNotEmpty()) {
+                currentNumber = tokens.removeAt(tokens.size - 1)
             }
         }
+        updateDisplay()
     }
 
     fun onEqualsClick() {
-        if (firstOperand != null && operator.isNotEmpty() && currentNumber.isNotEmpty()) {
-            val secondOperand = try {
-                BigDecimal(currentNumber)
-            } catch (e: Exception) {
-                BigDecimal.ZERO
-            }
-            
-            val res = calculate(firstOperand!!, secondOperand, operator)
+        if (currentNumber.isNotEmpty()) {
+            tokens.add(currentNumber)
+            currentNumber = ""
+        }
 
-            if (res == null) {
-                _result.value = "Error"
-                currentNumber = ""
-            } else {
-                val formattedRes = res.stripTrailingZeros().toPlainString()
-                _result.value = formattedRes
-                // 다음 연산을 위해 결과값을 현재 숫자로 설정
-                currentNumber = formattedRes
-            }
-            firstOperand = null
-            operator = ""
+        if (tokens.isEmpty()) return
+
+        // If ends with operator, remove it
+        if (tokens.last() in listOf("+", "-", "*", "/", "%")) {
+            tokens.removeAt(tokens.size - 1)
+        }
+
+        val fullExp = _expression.value ?: ""
+        val finalRes = evaluate(tokens)
+
+        if (finalRes == null) {
+            _result.value = "Error"
+        } else {
+            val displayRes = formatter.format(finalRes.stripTrailingZeros())
+            _result.value = displayRes
+            
+            // Save to history
+            saveHistory(fullExp, displayRes)
+            
+            // Prepare for next calculation
+            tokens.clear()
+            currentNumber = finalRes.stripTrailingZeros().toPlainString()
         }
     }
 
-    private fun calculate(first: BigDecimal, second: BigDecimal, op: String): BigDecimal? {
-        return try {
-            when (op) {
-                "+" -> first.add(second)
-                "-" -> first.subtract(second)
-                "*" -> first.multiply(second)
-                "/" -> if (second != BigDecimal.ZERO) {
-                    // 무한 소수 발생 시 소수점 10자리까지 계산
-                    first.divide(second, 10, RoundingMode.HALF_UP)
-                } else {
-                    null
+    private fun evaluate(inputTokens: List<String>): BigDecimal? {
+        if (inputTokens.isEmpty()) return null
+        
+        try {
+            // We'll do sequential evaluation (left to right) as is common in simple calculators
+            var res = BigDecimal(inputTokens[0])
+            var i = 1
+            while (i < inputTokens.size) {
+                val op = inputTokens[i]
+                val nextVal = BigDecimal(inputTokens[i + 1])
+                
+                res = when (op) {
+                    "+" -> res.add(nextVal)
+                    "-" -> res.subtract(nextVal)
+                    "*" -> res.multiply(nextVal)
+                    "/" -> if (nextVal != BigDecimal.ZERO) res.divide(nextVal, 10, RoundingMode.HALF_UP) else return null
+                    "%" -> res.multiply(nextVal).divide(BigDecimal("100"), 10, RoundingMode.HALF_UP)
+                    else -> res
                 }
-                else -> first
+                i += 2
             }
+            return res
         } catch (e: Exception) {
-            null
+            return null
+        }
+    }
+
+    private fun saveHistory(exp: String, res: String) {
+        viewModelScope.launch {
+            repository.insert(HistoryEntity(type = "CALCULATOR", expression = exp, result = res))
+        }
+    }
+
+    fun clearHistory() {
+        viewModelScope.launch {
+            repository.clearHistoryByType("CALCULATOR")
         }
     }
 }

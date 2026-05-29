@@ -3,5 +3,7 @@
     <style name="Base.Theme.Gemini" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:fontFamily">@font/jua</item>
+        <item name="fontFamily">@font/jua</item>
     </style>
 </resources>

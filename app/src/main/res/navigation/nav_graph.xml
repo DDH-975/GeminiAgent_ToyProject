@@ -28,4 +28,10 @@
         android:name="com.example.gemini.ui.DutchPayFragment"
         android:label="더치페이"
         tools:layout="@layout/fragment_dutch_pay" />
+
+    <fragment
+        android:id="@+id/discountFragment"
+        android:name="com.example.gemini.ui.DiscountFragment"
+        android:label="할인"
+        tools:layout="@layout/fragment_discount" />
 </navigation>

@@ -12,6 +12,8 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="학점 계산기"
         android:textColor="@color/black"
         android:textSize="24sp"
@@ -19,55 +21,77 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/btn_history"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="히스토리"
+        android:src="@android:drawable/ic_menu_recent_history"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+        app:layout_constraintEnd_toStartOf="@+id/btn_add_subject"
+        app:layout_constraintTop_toTopOf="@+id/tv_title"
+        app:tint="@color/operator_sky_blue" />
+
     <Button
         android:id="@+id/btn_add_subject"
         style="@style/ActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="과목 추가"
+        android:text="+ 과목 추가"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/tv_title" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_subjects"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/layout_result"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/card_result_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title"
         tools:listitem="@layout/item_gpa_subject" />
 
-    <LinearLayout
-        android:id="@+id/layout_result"
-        android:layout_width="0dp"
+    <!-- 결과 영역 카드 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_result_container"
+        style="@style/AppCard"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/tv_gpa_result"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="16dp"
-            android:textColor="@color/operator_sky_blue"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            tools:text="평균 평점: 4.50"
-            tools:visibility="visible" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/btn_calculate_gpa"
-            style="@style/ActionButton"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="평균 평점(GPA) 계산하기" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_gpa_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingVertical="12dp"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="평균 평점: 4.50"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/btn_calculate_gpa"
+                style="@style/ActionButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="GPA 계산하기" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

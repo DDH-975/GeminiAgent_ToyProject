@@ -6,21 +6,20 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.gemini.databinding.FragmentDutchPayBinding
-import com.example.gemini.viewmodel.DutchPayViewModel
+import com.example.gemini.databinding.FragmentDiscountBinding
+import com.example.gemini.viewmodel.DiscountViewModel
 import java.text.DecimalFormat
 
-class DutchPayFragment : Fragment() {
-    private var _binding: FragmentDutchPayBinding? = null
+class DiscountFragment : Fragment() {
+    private var _binding: FragmentDiscountBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: DutchPayViewModel by viewModels()
+    private val viewModel: DiscountViewModel by viewModels()
     private val decimalFormat = DecimalFormat("#,###")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentDutchPayBinding.inflate(inflater, container, false)
+        _binding = FragmentDiscountBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -30,23 +29,13 @@ class DutchPayFragment : Fragment() {
         setupObservers()
         setupInputFilters()
 
-        binding.btnMinus.setOnClickListener {
-            viewModel.decrementPeople()
-        }
+        binding.btnCalculateDiscount.setOnClickListener {
+            val productName = binding.etProductName.text.toString()
+            val priceStr = binding.etOriginalPrice.text.toString().replace(",", "")
+            val rateStr = binding.etDiscountRate.text.toString()
 
-        binding.btnPlus.setOnClickListener {
-            viewModel.incrementPeople()
-        }
-
-        binding.etPeopleCount.addTextChangedListener {
-            val count = it.toString().toIntOrNull() ?: 1
-            viewModel.setPeopleCount(count)
-        }
-
-        binding.btnCalculateDutch.setOnClickListener {
-            val amountStr = binding.etTotalAmount.text.toString().replace(",", "")
-            if (amountStr.isNotEmpty()) {
-                viewModel.calculateDutchPay(amountStr.toDouble())
+            if (priceStr.isNotEmpty() && rateStr.isNotEmpty()) {
+                viewModel.calculateDiscount(productName, priceStr.toDouble(), rateStr.toDouble())
             }
         }
 
@@ -60,41 +49,36 @@ class DutchPayFragment : Fragment() {
     }
 
     private fun setupInputFilters() {
-        binding.etTotalAmount.addTextChangedListener(object : TextWatcher {
+        binding.etOriginalPrice.addTextChangedListener(object : TextWatcher {
             private var current = ""
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString() != current) {
-                    binding.etTotalAmount.removeTextChangedListener(this)
+                    binding.etOriginalPrice.removeTextChangedListener(this)
                     
                     val cleanString = s.toString().replace(",", "")
                     if (cleanString.isNotEmpty()) {
                         val parsed = cleanString.toDouble()
                         val formatted = decimalFormat.format(parsed)
                         current = formatted
-                        binding.etTotalAmount.setText(formatted)
-                        binding.etTotalAmount.setSelection(formatted.length)
+                        binding.etOriginalPrice.setText(formatted)
+                        binding.etOriginalPrice.setSelection(formatted.length)
                     } else {
                         current = ""
                     }
                     
-                    binding.etTotalAmount.addTextChangedListener(this)
+                    binding.etOriginalPrice.addTextChangedListener(this)
                 }
             }
         })
     }
 
     private fun setupObservers() {
-        viewModel.peopleCount.observe(viewLifecycleOwner) { count ->
-            if (binding.etPeopleCount.text.toString() != count.toString()) {
-                binding.etPeopleCount.setText(count.toString())
-            }
-        }
-
-        viewModel.perPersonAmount.observe(viewLifecycleOwner) { amount ->
-            if (amount != null) {
-                binding.tvPerPersonAmount.text = "${decimalFormat.format(amount)} 원"
+        viewModel.result.observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                binding.tvFinalPrice.text = "${decimalFormat.format(result.finalPrice)} 원"
+                binding.tvSavedAmount.text = "${decimalFormat.format(result.savedAmount)}원 할인받음"
                 binding.cardResult.visibility = View.VISIBLE
             }
         }

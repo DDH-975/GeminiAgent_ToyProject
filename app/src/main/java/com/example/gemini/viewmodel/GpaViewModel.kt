@@ -1,17 +1,33 @@
 package com.example.gemini.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.gemini.data.AppDatabase
+import com.example.gemini.data.HistoryEntity
+import com.example.gemini.data.HistoryRepository
 import com.example.gemini.model.GpaSubject
+import kotlinx.coroutines.launch
+import java.util.Locale
 
-class GpaViewModel : ViewModel() {
+class GpaViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository: HistoryRepository
+    init {
+        val historyDao = AppDatabase.getDatabase(application).historyDao()
+        repository = HistoryRepository(historyDao)
+    }
 
     private val _subjects = MutableLiveData<MutableList<GpaSubject>>(mutableListOf(GpaSubject()))
     val subjects: LiveData<MutableList<GpaSubject>> = _subjects
 
     private val _gpaResult = MutableLiveData<Double?>()
     val gpaResult: LiveData<Double?> = _gpaResult
+
+    val history: LiveData<List<HistoryEntity>> = repository.getHistoryByType("GPA").asLiveData()
 
     fun addSubject() {
         val currentList = _subjects.value ?: mutableListOf()
@@ -52,10 +68,30 @@ class GpaViewModel : ViewModel() {
             }
         }
 
-        if (totalCredits > 0) {
-            _gpaResult.value = totalPoints / totalCredits
-        } else {
-            _gpaResult.value = 0.0
+        val result = if (totalCredits > 0) totalPoints / totalCredits else 0.0
+        _gpaResult.value = result
+        
+        saveHistory(currentList, result)
+    }
+
+    private fun saveHistory(subjectList: List<GpaSubject>, gpa: Double) {
+        viewModelScope.launch {
+            val summary = "${subjectList.size} 개 과목"
+            val details = StringBuilder()
+            subjectList.forEach { 
+                val name = if (it.name.isBlank()) "미지정" else it.name
+                details.append("- $name: ${it.grade} (${it.credits}학점)\n")
+            }
+            
+            val fullExpression = "$summary\n\n${details.toString().trim()}"
+            val res = String.format(Locale.getDefault(), "평균 평점: %.2f", gpa)
+            repository.insert(HistoryEntity(type = "GPA", expression = fullExpression, result = res))
+        }
+    }
+
+    fun clearHistory() {
+        viewModelScope.launch {
+            repository.clearHistoryByType("GPA")
         }
     }
 }

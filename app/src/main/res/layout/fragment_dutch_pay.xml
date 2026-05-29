@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="24dp"
+    android:padding="16dp"
     tools:context=".ui.DutchPayFragment">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="더치페이 계산기"
         android:textColor="@color/black"
         android:textSize="24sp"
@@ -19,87 +21,107 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_total_amount"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:hint="총 금액 (원)"
+    <ImageButton
+        android:id="@+id/btn_history"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="히스토리"
+        android:src="@android:drawable/ic_menu_recent_history"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_title"
+        app:tint="@color/operator_sky_blue" />
+
+    <!-- 입력 카드 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_input"
+        style="@style/AppCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_total_amount"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    <LinearLayout
-        android:id="@+id/layout_people_count"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_total_amount">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_people_count"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="인원 수">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_people_count"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_total_amount"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:text="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="총 결제 금액 (원)">
 
-        <Button
-            android:id="@+id/btn_minus"
-            style="@style/SecondaryButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="8dp"
-            android:text="-" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_total_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btn_plus"
-            style="@style/SecondaryButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="4dp"
-            android:text="+" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_calculate_dutch"
-        style="@style/ActionButton"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="24dp"
-        android:text="계산하기"
-        app:layout_constraintTop_toBottomOf="@+id/layout_people_count" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_people_count"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="인원 수">
 
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_people_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btn_minus"
+                    style="@style/SecondaryButton"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="12dp"
+                    android:text="-" />
+
+                <Button
+                    android:id="@+id/btn_plus"
+                    style="@style/SecondaryButton"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="8dp"
+                    android:text="+" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_calculate_dutch"
+                style="@style/ActionButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="20dp"
+                android:text="정산하기" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 결과 카드 -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_result"
+        style="@style/AppCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/btn_calculate_dutch"
+        app:cardBackgroundColor="#F0F7FF"
+        app:layout_constraintTop_toBottomOf="@+id/card_input"
         tools:visibility="visible">
 
         <LinearLayout
@@ -107,14 +129,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="32dp">
+            android:padding="28dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1인당 내야 할 금액"
+                android:text="1인당 지불할 금액"
                 android:textColor="@color/expression_text"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_per_person_amount"
@@ -124,7 +146,7 @@
                 android:textColor="@color/black"
                 android:textSize="36sp"
                 android:textStyle="bold"
-                tools:text="10,000 원" />
+                tools:text="15,000 원" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

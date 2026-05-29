@@ -37,6 +37,8 @@ class CalculatorFragment : Fragment() {
         viewModel.result.observe(viewLifecycleOwner) {
             binding.tvResult.text = it
         }
+        // history LiveData가 활성화되도록 관찰 (asLiveData()는 관찰자가 있어야 데이터 수집을 시작함)
+        viewModel.history.observe(viewLifecycleOwner) { }
     }
 
     private fun setupClickListeners() {
@@ -60,6 +62,14 @@ class CalculatorFragment : Fragment() {
         binding.btnClear.setOnClickListener { viewModel.onClearClick() }
         binding.btnBackspace.setOnClickListener { viewModel.onBackspaceClick() }
         binding.btnEquals.setOnClickListener { viewModel.onEqualsClick() }
+
+        binding.btnHistory.setOnClickListener {
+            val historyFragment = HistoryBottomSheetFragment()
+            historyFragment.setHistorySource(viewModel.history) {
+                viewModel.clearHistory()
+            }
+            historyFragment.show(parentFragmentManager, HistoryBottomSheetFragment.TAG)
+        }
     }
 
     override fun onDestroyView() {
