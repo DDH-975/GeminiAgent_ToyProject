@@ -10,7 +10,7 @@
         android:id="@+id/et_subject_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="1.1"
         android:hint="과목명"
         android:inputType="text" />
 
@@ -25,7 +25,7 @@
         android:id="@+id/spinner_grade"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1.5"
+        android:layout_weight="1"
         android:entries="@array/grades_array" />
 
     <ImageButton
