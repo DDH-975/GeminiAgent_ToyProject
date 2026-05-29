@@ -29,14 +29,12 @@ class CalculatorViewModel : ViewModel() {
     fun onOperatorClick(op: String) {
         if (currentNumber.isNotEmpty()) {
             if (firstOperand == null) {
-                // 첫 번째 숫자 입력 후 연산자 클릭
                 firstOperand = try {
                     BigDecimal(currentNumber)
                 } catch (e: Exception) {
                     null
                 }
             } else if (operator.isNotEmpty()) {
-                // 이미 첫 번째 숫자와 연산자가 있는 상태에서 새로운 연산자 클릭 (중간 계산 수행)
                 val secondOperand = try {
                     BigDecimal(currentNumber)
                 } catch (e: Exception) {
@@ -49,7 +47,6 @@ class CalculatorViewModel : ViewModel() {
                     onClearClick()
                     return
                 } else {
-                    // 중간 결과를 firstOperand에 저장하여 다음 연산 준비
                     firstOperand = intermediateResult
                 }
             }
@@ -57,7 +54,6 @@ class CalculatorViewModel : ViewModel() {
             currentNumber = ""
             _expression.value = (_expression.value ?: "") + " " + op + " "
         } else if (firstOperand != null) {
-            // 이미 숫자가 있는 상태에서 연산자만 변경
             operator = op
             val exp = _expression.value ?: ""
             val lastSpaceIndex = exp.trimEnd().lastIndexOf(" ")
